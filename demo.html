@@ -8,7 +8,7 @@ body, html {
   margin: 0; padding: 0;
   font-family: Arial, sans-serif;
   background: black;
-  color: #020202;
+  color: #bdbcbc;
   overflow: hidden;
 }
 .image {
@@ -30,9 +30,9 @@ body, html {
   from {transform: scale(1.8);}
   to { transform: scale(1.0); }
 }
-@keyframes moveUp {
-  from { transform: scale(1) translateY(0px); }
-  to { transform: scale(1) translateY(-100px); }
+@keyframes moveUpLeft {
+  from { transform: scale(1.3) translate(-50px,-100px); }
+  to { transform: scale(1.1) translate(80px,55px); }
 }
 
 #text {
@@ -41,7 +41,8 @@ body, html {
   width: 80%; max-width: 800px;
   font-size: 1.25rem;
   text-align: center;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.9);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
 }
 #playButton {
   position: fixed;
@@ -67,7 +68,8 @@ body, html {
 <script>
 const texts = [
   "Ihr erwacht im Sand, eure Kleider durchweicht, den Geschmack von Salz auf euren Lippen. Während ihr euch langsam aufsetzt und versucht, euch die letzten Geschehnisse ins Gedächtnis zu rufen, kommt es euch vor, als würden sich diese vor eurem Verstand verstecken.",
-  "Das Knurren eures Magens holt euch aus eurer vergeblichen Konzentration. Es gibt jetzt wichtigere Aufgaben, als das Greifen nach flüchtigen Erinnerungen."
+  "Das Knurren eures Magens holt euch aus eurer vergeblichen Konzentration. Es gibt jetzt wichtigere Aufgaben, als das Greifen nach flüchtigen Erinnerungen.",
+  "Ihr blickt euch um und erkennt unweit im Landesinneren die Ruinen eines Dörfchens. Während ihr euch auf direktem Wege dorthin begebt, bemerkt ihr, dass sich mit jedem Schritt, den ihr euch vom Wasser entfernt, ein unnatürlicher Nebel verdichtet."
 ];
 let current = 0;
 
@@ -88,8 +90,8 @@ function playScenes() {
   let sceneIndex = 0;
 
   function playNextScene() {
-    // Alte Szene ausblenden
-    if (sceneIndex > 0) {
+    // Alte Szene ausblenden, bis auf die letzte
+    if (sceneIndex > 0 && sceneIndex < scenes.length) {
       const prevScene = scenes[sceneIndex - 1];
       const prevImage = document.getElementById(prevScene.imageId);
       prevImage.classList.remove('show');
@@ -128,7 +130,7 @@ function playTexts(){
     const text = texts[textIndex];
     textIndex++;
     typeText(text, textDiv, () => {
-      setTimeout(playNextText, 8000);
+      setTimeout(playNextText, 7000);
     });
   }
 
@@ -138,15 +140,15 @@ function playTexts(){
 const scenes = [
   {
     imageId: 'image1',
-    imageUrl: 'Schiffbruechiger.png',
+    imageUrl: 'schiffbruechiger.png',
     animation: 'zoomOut 15s ease-out forwards',
-    delay: 15000
+    delay: 25000
   },
   {
     imageId: 'image2',
-    imageUrl: 'isle_first_look.png',
-    animation: 'moveUp 15s ease-out forwards',
-    delay: 15000
+    imageUrl: 'ruins.png',
+    animation: 'moveUpLeft 15s ease-out forwards',
+    delay: 25000
   }
 ];
 
