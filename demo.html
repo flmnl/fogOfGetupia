@@ -11,17 +11,30 @@ body, html {
   color: #020202;
   overflow: hidden;
 }
-#image {
+.image {
   position: fixed;
   top: 0; left: 0;
   width:100%; height:100vh;
-  background: url('Schiffbruechiger.png') no-repeat center center;
   background-size: cover;
-  transform: scale(1.8);
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.show {
+  opacity: 1;
+}
+.hide {
+  opacity: 0;
 }
 @keyframes zoomOut {
+  from {transform: scale(1.8);}
   to { transform: scale(1.0); }
 }
+@keyframes moveUp {
+  from { transform: scale(1) translateY(0px); }
+  to { transform: scale(1) translateY(-100px); }
+}
+
 #text {
   position: fixed;
   bottom: 5%; left: 50%; transform: translateX(-50%);
@@ -42,7 +55,8 @@ body, html {
 </style>
 </head>
 <body>
-<div id="image"></div>
+<div id="image1" class="image"></div>
+<div id="image2" class="image"></div>
 <div id="text"></div>
 <button id="playButton">Play</button>
 
@@ -52,7 +66,7 @@ body, html {
 
 <script>
 const texts = [
-  "ihr erwacht im Sand, eure Kleider durchweicht, den Geschmack von Salz auf euren Lippen. Während ihr euch langsam aufsetzt und versucht, euch die letzten Geschehnisse ins Gedächtnis zu rufen, kommt es euch vor, als würden sich diese vor eurem Verstand verstecken.",
+  "Ihr erwacht im Sand, eure Kleider durchweicht, den Geschmack von Salz auf euren Lippen. Während ihr euch langsam aufsetzt und versucht, euch die letzten Geschehnisse ins Gedächtnis zu rufen, kommt es euch vor, als würden sich diese vor eurem Verstand verstecken.",
   "Das Knurren eures Magens holt euch aus eurer vergeblichen Konzentration. Es gibt jetzt wichtigere Aufgaben, als das Greifen nach flüchtigen Erinnerungen."
 ];
 let current = 0;
@@ -70,15 +84,71 @@ function typeText(text, elem, callback) {
   }, 30);
 }
 
-function playScene() {
-  document.getElementById('image').style.animation = 'zoomOut 15s ease-out forwards';
-  const textDiv = document.getElementById('text');
-  typeText(texts[0], textDiv, () => {
-    setTimeout(() => {
-      typeText(texts[1], textDiv);
-    }, 8000);
-  });
+function playScenes() {
+  let sceneIndex = 0;
+
+  function playNextScene() {
+    // Alte Szene ausblenden
+    if (sceneIndex > 0) {
+      const prevScene = scenes[sceneIndex - 1];
+      const prevImage = document.getElementById(prevScene.imageId);
+      prevImage.classList.remove('show');
+    }
+    
+    if (sceneIndex >= scenes.length) {
+      console.log("Alle Szenen durch");
+      return;
+    }
+
+    const scene = scenes[sceneIndex];
+    const imgDiv = document.getElementById(scene.imageId);
+
+    // Bildquelle der aktuellen Szene setzen
+    imgDiv.style.backgroundImage = `url(${scene.imageUrl})`;
+    imgDiv.classList.add('show');
+    imgDiv.style.animation = scene.animation;
+
+    sceneIndex++;
+    setTimeout(playNextScene, scene.delay);
+  }
+
+  playNextScene();
 }
+
+function playTexts(){
+  // Text abspielen
+  const textDiv = document.getElementById('text');
+  let textIndex = 0;
+
+  function playNextText() {
+    if (textIndex >= texts.length) {
+      console.log("Alle Texte durch");
+      return;
+    }
+    const text = texts[textIndex];
+    textIndex++;
+    typeText(text, textDiv, () => {
+      setTimeout(playNextText, 8000);
+    });
+  }
+
+  playNextText();
+}
+// Hier deine Szenen festlegen
+const scenes = [
+  {
+    imageId: 'image1',
+    imageUrl: 'Schiffbruechiger.png',
+    animation: 'zoomOut 15s ease-out forwards',
+    delay: 15000
+  },
+  {
+    imageId: 'image2',
+    imageUrl: 'isle_first_look.png',
+    animation: 'moveUp 15s ease-out forwards',
+    delay: 15000
+  }
+];
 
 const playButton = document.getElementById('playButton');
 playButton.addEventListener('click', (e) => {
@@ -86,9 +156,10 @@ playButton.addEventListener('click', (e) => {
   const music = document.getElementById('music');
   music.play();
   playButton.style.display = 'none';
-  playScene();
+  playScenes();
+  playTexts();
 
-  // Jetzt erst den globalen Klick zum Verlassen registrieren
+  // Nach dem Start Klick zum Verlassen
   document.body.addEventListener('click', () => {
     window.location.href = 'index.html';
   });
