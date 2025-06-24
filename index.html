@@ -46,7 +46,7 @@
             <strong>Stufe:</strong> <span id="level"></span><br>
             <strong>Erfahrung:</strong> <span id="xp"></span> / <span id="xp_next_level"></span>
             <div class="bar">
-                <div id="xp_bar" class="bar-inner" style = background-color:rgb(40,210,17) ></div>
+                <div id="xp_bar" class="bar-inner" style=background-color:rgb(40,210,17)></div>
             </div>
         </div>
 
@@ -105,6 +105,26 @@
         </div>
     </div>
 
+    <!-- Popup für Tutorial Overlay -->
+    <div id="characterOverlay" style="
+  position: fixed;
+  top: 0; left: 0;
+  width:100vw; height:100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.8);
+  z-index: 1000;">
+        <div
+            style="background: #fff; color: #000; padding: 2rem; border-radius: 8px; max-width: 600px; text-align: center;">
+            <h2>Dein Charakterbogen</h2>
+            <p>Hier erfährst du, wie dein Charakterbogen funktioniert, welche Werte wichtig sind und wie sie dein
+                Abenteuer beeinflussen werden...</p>
+            <button id="characterClose">Alles klar!</button>
+        </div>
+    </div>
+
+
 
     <!-- JavaScript zum Laden und Anzeigen der JSON-Daten -->
     <script>
@@ -151,10 +171,10 @@
                 div.className = 'attribute';
                 let icon = "", color = "#367345";
                 switch (key) {
-                    case "Stärke": icon = "💪";color = "#e74c3c"; break;
-                    case "Konstitution": icon = "🏃";color = "#27ae60"; break;
+                    case "Stärke": icon = "💪"; color = "#e74c3c"; break;
+                    case "Konstitution": icon = "🏃"; color = "#27ae60"; break;
                     case "Intelligenz": icon = "🧠"; color = "#2980b9"; break;
-                    case "Beweglichkeit": icon = "🤸";color = "#f39c12"; break;
+                    case "Beweglichkeit": icon = "🤸"; color = "#f39c12"; break;
                     default: icon = "✨";
                 }
 
@@ -264,6 +284,21 @@
             const menu = document.getElementById("side-menu");
             menu.classList.toggle("hidden");
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('showTutorial') === 'true') {
+                // Popup zeigen
+                const characterOverlay = document.getElementById('characterOverlay');
+                characterOverlay.style.display = 'flex';
+                // Nach dem Anzeigen den Wert entfernen
+                localStorage.setItem('showTutorial', 'false');
+
+                // Button zum Schließen
+                document.getElementById('characterClose').addEventListener('click', () => {
+                    characterOverlay.style.display = 'none';
+                });
+            }
+        });
 
     </script>
 </body>

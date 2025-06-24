@@ -1,171 +1,271 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8" />
-<title>Getupia Demo</title>
-<style>
-body, html {
-  margin: 0; padding: 0;
-  font-family: Arial, sans-serif;
-  background: black;
-  color: #bdbcbc;
-  overflow: hidden;
-}
-.image {
-  position: fixed;
-  top: 0; left: 0;
-  width:100%; height:100vh;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-.show {
-  opacity: 1;
-}
-.hide {
-  opacity: 0;
-}
-@keyframes zoomOut {
-  from {transform: scale(1.8);}
-  to { transform: scale(1.0); }
-}
-@keyframes moveUpLeft {
-  from { transform: scale(1.3) translate(-50px,-100px); }
-  to { transform: scale(1.1) translate(80px,55px); }
-}
+  <meta charset="UTF-8" />
+  <title>Getupia Demo</title>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: black;
+      color: #bdbcbc;
+      overflow: hidden;
+    }
 
-#text {
-  position: fixed;
-  bottom: 5%; left: 50%; transform: translateX(-50%);
-  width: 80%; max-width: 800px;
-  font-size: 1.25rem;
-  text-align: center;
-  background: rgba(0,0,0,0.9);
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
-}
-#playButton {
-  position: fixed;
-  top: 50%; left: 50%; transform: translate(-50%, -50%);
-  padding: 1rem 2rem;
-  font-size: 1.25rem;
-  background: rgba(255,255,255,0.8);
-  border-radius: 8px;
-  cursor: pointer;
-}
-</style>
+    .image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .show {
+      opacity: 1;
+    }
+
+    .hide {
+      opacity: 0;
+    }
+
+    @keyframes zoomOut {
+      from {
+        transform: scale(1.8);
+      }
+
+      to {
+        transform: scale(1.0);
+      }
+    }
+
+    @keyframes moveUpLeft {
+      from {
+        transform: scale(1.3) translate(-50px, -100px);
+      }
+
+      to {
+        transform: scale(1.1) translate(80px, 55px);
+      }
+    }
+
+    #text {
+      position: fixed;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      max-width: 800px;
+      font-size: 1.25rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.9);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    }
+
+    #playButton {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #introOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #introContent {
+      background: #fff;
+      color: #000;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    #startButton {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+
+    .overlay-button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background: #007BFF;
+      color: #fff;
+      transition: background 0.3s;
+    }
+
+    .overlay-button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
+
 <body>
-<div id="image1" class="image"></div>
-<div id="image2" class="image"></div>
-<div id="text"></div>
-<button id="playButton">Play</button>
+  <div id="image1" class="image"></div>
+  <div id="image2" class="image"></div>
+  <div id="text"></div>
+  <button id="playButton">Play</button>
+  <div id="introOverlay">
+    <div id="introContent">
+      <h2>Willkommen in Getupia</h2>
+      <p>Dieses Spiel soll als Motivation dienen, sich sportlich zu betätigen. Angelehnt an RPG-Sport-Romane basiert der Spaß auf Ehrlichkeit. Die App trackt keine Aktivitäten,
+        sondern diese werden auf Ehrenbasis des Spielers als absolviert gekennzeichnet. Absolvierte Aktivitäten bringen das Spielgeschehen weiter, enthüllen Story, NPCs, Artefakte und Orte und 
+        entwickeln den Charakterbogen weiter. 
+      </p>
+      <button id="startButton" class="overlay-button">Weiter</button>
+      <button id="closeOverlayButton" class="overlay-button">Ausblenden</button>
 
-<audio id="music" loop>
-  <source src="2016-04-26_-_Peace_And_Happy_-_David_Fesliyan.mp3" type="audio/mp3">
-</audio>
 
-<script>
-const texts = [
-  "Ihr erwacht im Sand, eure Kleider durchweicht, den Geschmack von Salz auf euren Lippen. Während ihr euch langsam aufsetzt und versucht, euch die letzten Geschehnisse ins Gedächtnis zu rufen, kommt es euch vor, als würden sich diese vor eurem Verstand verstecken.",
-  "Das Knurren eures Magens holt euch aus eurer vergeblichen Konzentration. Es gibt jetzt wichtigere Aufgaben, als das Greifen nach flüchtigen Erinnerungen.",
-  "Ihr blickt euch um und erkennt unweit im Landesinneren die Ruinen eines Dörfchens. Während ihr euch auf direktem Wege dorthin begebt, bemerkt ihr, dass sich mit jedem Schritt, den ihr euch vom Wasser entfernt, ein unnatürlicher Nebel verdichtet."
-];
-let current = 0;
+    </div>
+  </div>
 
-function typeText(text, elem, callback) {
-  elem.innerHTML = '';
-  let i = 0;
-  let interval = setInterval(() => {
-    elem.innerHTML += text[i];
-    i++;
-    if (i >= text.length) {
-      clearInterval(interval);
-      if (callback) callback();
-    }
-  }, 30);
-}
+  <audio id="music" loop>
+    <source src="2016-04-26_-_Peace_And_Happy_-_David_Fesliyan.mp3" type="audio/mp3">
+  </audio>
 
-function playScenes() {
-  let sceneIndex = 0;
+  <script>
+    const texts = [
+      "Ihr erwacht im Sand, eure Kleider durchweicht, den Geschmack von Salz auf euren Lippen. Während ihr euch langsam aufsetzt und versucht, euch die letzten Geschehnisse ins Gedächtnis zu rufen, kommt es euch vor, als würden sich diese vor eurem Verstand verstecken.",
+      "Das Knurren eures Magens holt euch aus eurer vergeblichen Konzentration. Es gibt jetzt wichtigere Aufgaben, als das Greifen nach flüchtigen Erinnerungen.",
+      "Ihr blickt euch um und erkennt unweit im Landesinneren die Ruinen eines Dörfchens. Während ihr euch auf direktem Wege dorthin begebt, bemerkt ihr, dass sich mit jedem Schritt, den ihr euch vom Wasser entfernt, ein unnatürlicher Nebel verdichtet."
+    ];
+    let current = 0;
 
-  function playNextScene() {
-    // Alte Szene ausblenden, bis auf die letzte
-    if (sceneIndex > 0 && sceneIndex < scenes.length) {
-      const prevScene = scenes[sceneIndex - 1];
-      const prevImage = document.getElementById(prevScene.imageId);
-      prevImage.classList.remove('show');
-    }
-    
-    if (sceneIndex >= scenes.length) {
-      console.log("Alle Szenen durch");
-      return;
+    function typeText(text, elem, callback) {
+      elem.innerHTML = '';
+      let i = 0;
+      let interval = setInterval(() => {
+        elem.innerHTML += text[i];
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          if (callback) callback();
+        }
+      }, 30);
     }
 
-    const scene = scenes[sceneIndex];
-    const imgDiv = document.getElementById(scene.imageId);
+    function playScenes() {
+      let sceneIndex = 0;
 
-    // Bildquelle der aktuellen Szene setzen
-    imgDiv.style.backgroundImage = `url(${scene.imageUrl})`;
-    imgDiv.classList.add('show');
-    imgDiv.style.animation = scene.animation;
+      function playNextScene() {
+        // Alte Szene ausblenden, bis auf die letzte
+        if (sceneIndex > 0 && sceneIndex < scenes.length) {
+          const prevScene = scenes[sceneIndex - 1];
+          const prevImage = document.getElementById(prevScene.imageId);
+          prevImage.classList.remove('show');
+        }
 
-    sceneIndex++;
-    setTimeout(playNextScene, scene.delay);
-  }
+        if (sceneIndex >= scenes.length) {
+          console.log("Alle Szenen durch");
+          return;
+        }
 
-  playNextScene();
-}
+        const scene = scenes[sceneIndex];
+        const imgDiv = document.getElementById(scene.imageId);
 
-function playTexts(){
-  // Text abspielen
-  const textDiv = document.getElementById('text');
-  let textIndex = 0;
+        // Bildquelle der aktuellen Szene setzen
+        imgDiv.style.backgroundImage = `url(${scene.imageUrl})`;
+        imgDiv.classList.add('show');
+        imgDiv.style.animation = scene.animation;
 
-  function playNextText() {
-    if (textIndex >= texts.length) {
-      console.log("Alle Texte durch");
-      return;
+        sceneIndex++;
+        setTimeout(playNextScene, scene.delay);
+      }
+
+      playNextScene();
     }
-    const text = texts[textIndex];
-    textIndex++;
-    typeText(text, textDiv, () => {
-      setTimeout(playNextText, 7000);
+
+    function playTexts() {
+      // Text abspielen
+      const textDiv = document.getElementById('text');
+      let textIndex = 0;
+
+      function playNextText() {
+        if (textIndex >= texts.length) {
+          console.log("Alle Texte durch");
+          return;
+        }
+        const text = texts[textIndex];
+        textIndex++;
+        typeText(text, textDiv, () => {
+          setTimeout(playNextText, 7000);
+        });
+      }
+
+      playNextText();
+    }
+    // Hier deine Szenen festlegen
+    const scenes = [
+      {
+        imageId: 'image1',
+        imageUrl: 'schiffbruechiger.png',
+        animation: 'zoomOut 15s ease-out forwards',
+        delay: 25000
+      },
+      {
+        imageId: 'image2',
+        imageUrl: 'ruins.png',
+        animation: 'moveUpLeft 15s ease-out forwards',
+        delay: 25000
+      }
+    ];
+
+    const playButton = document.getElementById('playButton');
+    playButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const music = document.getElementById('music');
+      music.play();
+      playButton.style.display = 'none';
+      playScenes();
+      playTexts();
+
     });
-  }
+    // Weiter zur Index-Seite
+    document.getElementById('startButton').addEventListener('click', () => {
+      localStorage.setItem('showTutorial', 'true');
+      window.location.href = 'index.html';
+    });
 
-  playNextText();
-}
-// Hier deine Szenen festlegen
-const scenes = [
-  {
-    imageId: 'image1',
-    imageUrl: 'schiffbruechiger.png',
-    animation: 'zoomOut 15s ease-out forwards',
-    delay: 25000
-  },
-  {
-    imageId: 'image2',
-    imageUrl: 'ruins.png',
-    animation: 'moveUpLeft 15s ease-out forwards',
-    delay: 25000
-  }
-];
+    // Nur Overlay ausblenden
+    document.getElementById('closeOverlayButton').addEventListener('click', () => {
+      document.getElementById('introOverlay').style.display = 'none';
+    });
 
-const playButton = document.getElementById('playButton');
-playButton.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const music = document.getElementById('music');
-  music.play();
-  playButton.style.display = 'none';
-  playScenes();
-  playTexts();
+    // Beim Klick aufs Video Overlay öffnen
+    document.body.addEventListener('click', (e) => {
+      if (e.target.closest('#playButton') || e.target.closest('#introOverlay')) {
+        return;
+      }
+      document.getElementById('introOverlay').style.display = 'flex';
+    });
 
-  // Nach dem Start Klick zum Verlassen
-  document.body.addEventListener('click', () => {
-    window.location.href = 'index.html';
-  });
-});
-</script>
+  </script>
 </body>
+
 </html>
