@@ -118,8 +118,7 @@
         <div
             style="background: #fff; color: #000; padding: 2rem; border-radius: 8px; max-width: 600px; text-align: center;">
             <h2>Dein Charakterbogen</h2>
-            <p>Hier erfährst du, wie dein Charakterbogen funktioniert, welche Werte wichtig sind und wie sie dein
-                Abenteuer beeinflussen werden...</p>
+            <p>Dies ist der Charakterbogen, hier ist der Fortschritt von dir und deinem Avatar erkennbar. Unter deinem gewählten Namen findest du die allgemeine Erfahrungsleiste, sowie die drei wichtigsten (und vorerst einzigen) Attribute: <br> Konstitution, Stärke und Intelligenz</p>
             <button id="characterClose">Alles klar!</button>
         </div>
     </div>
@@ -135,7 +134,7 @@
         ]).then(([CharacterData, questCards]) => {
 
             // Grunddaten einsetzen
-            document.getElementById('name').textContent = CharacterData.name;
+            document.getElementById('name').textContent = localStorage.getItem('playerName');
             document.getElementById('level').textContent = CharacterData.level;
             document.getElementById('xp').textContent = CharacterData.xp;
             document.getElementById('xp_next_level').textContent = CharacterData.xp_next_level;
