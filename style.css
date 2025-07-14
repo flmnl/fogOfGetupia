@@ -140,6 +140,20 @@ h2 {
   cursor: pointer;
 }
 
+.complete-quest-btn {
+    margin-top: 1rem;
+    background: #4caf50;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+.complete-quest-btn:hover {
+    background: #45a049;
+}
+
 .popup-icon {
   width: 64px;
   height: 64px;
