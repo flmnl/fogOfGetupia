@@ -1,6 +1,6 @@
 // character.js
 
-
+const firstLevelUp = 50;
 const defaultCharacter = {
   name: "RndN00b",
   level: 1,
@@ -8,21 +8,22 @@ const defaultCharacter = {
   xp_next_level: 100,
   attributes: {
     "Konstitution": {
-      value: 1,
-      max: 1,
-      progress: 0.0
+      level: 1,
+      progress: 0.0,
+      next: firstLevelUp
     },
     "Stärke": {
-      value: 1,
-      max: 1,
-      progress: 0.0
+      level: 1,
+      progress: 0.0,
+      next: firstLevelUp
     },
     "Intelligenz": {
-      value: 1,
-      max: 1,
-      progress: 0.0
+      level: 1,
+      progress: 0.0,
+      next: firstLevelUp
     }
   },
+
   active_cards: [1, 2, 3],
   last_update: new Date().toISOString().split("T")[0]
 };

@@ -141,17 +141,18 @@ h2 {
 }
 
 .complete-quest-btn {
-    margin-top: 1rem;
-    background: #4caf50;
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: bold;
+  margin-top: 1rem;
+  background: #4caf50;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
 }
+
 .complete-quest-btn:hover {
-    background: #45a049;
+  background: #45a049;
 }
 
 .popup-icon {
@@ -249,4 +250,50 @@ h2 {
 
 .hidden {
   display: none;
+}
+
+.reward-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index: 2000;
+    /* Popup zunächst unsichtbar */
+    display: none;
+}
+
+.reward-popup.hidden {
+    display: none;
+}
+
+.reward-popup:not(.hidden) {
+    display: block;
+}
+
+.reward-popup-content {
+    text-align: center;
+}
+
+.reward-popup-content p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.reward-popup-content button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.reward-popup-content button:hover {
+    background-color: #45a049;
 }

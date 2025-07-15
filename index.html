@@ -63,12 +63,12 @@
             Gültigkeit: 02.06. - 08.06.25 <!-- todo: Daten der Woche dynamisch erzeugen lassen-->
             <div id="card-list"></div>
         </div>
+
         <!-- Tracken neuer Aktivitäten -->
-         <!-- Tracken neuer Aktivitäten -->
         <div id="activity-form" class="p-4 bg-gray-100 rounded-xl shadow-md w-full max-w-md">
             <h2 class="text-xl font-bold mb-2">Aktivität hinzufügen</h2>
-        <!-- Popup-Hintergrund -->
-        <div id="activity-overlay" style="
+            <!-- Popup-Hintergrund -->
+            <div id="activity-overlay" style="
     display: none;
     position: fixed;
     top: 0; left: 0;
@@ -78,8 +78,8 @@
     align-items: center;
     z-index: 1000;
 ">
-            <!-- Das eigentliche Formular -->
-            <div id="activity-form" style="
+                <!-- Das eigentliche Formular -->
+                <div id="activity-form" style="
         background: white;
         padding: 2rem;
         border-radius: 1rem;
@@ -88,7 +88,7 @@
         box-shadow: 0 0 10px rgba(0,0,0,0.3);
         position: relative;
     ">
-                <button onclick="closeActivityForm()" style="
+                    <button onclick="closeActivityForm()" style="
             position: absolute;
             top: 0.5rem;
             right: 0.5rem;
@@ -98,57 +98,73 @@
             cursor: pointer;
         ">&times;</button>
 
-                <h2 class="text-xl font-bold mb-2">Aktivität hinzufügen</h2>
+                    <h2 class="text-xl font-bold mb-2">Aktivität hinzufügen</h2>
 
-                <label for="type">Aktivität:</label>
-                <select id="type" class="mb-2 w-full p-1 rounded">
-                    <option>Laufen</option>
-                    <option>Radfahren</option>
-                    <option>Krafttraining</option>
-                    <option>Stabi</option>
-                </select>
+                    <label for="category">Aktivitätsart:</label>
+                    <select id="category" class="mb-2 w-full p-1 rounded" onchange="updateActivityFields()">
+                        <option value="">Bitte wählen</option>
+                        <option value="ausdauer">Ausdauereinheit</option>
+                        <option value="kraft">Krafteinheit</option>
+                    </select>
 
-                <label for="details">Details:</label>
-                <textarea id="details" rows="3" class="mb-2 w-full p-1 rounded"></textarea>
+                    <div id="activity-subtype-container" class="mb-2 hidden">
+                        <label for="subtype">Aktivitätstyp:</label>
+                        <select id="subtype" class="w-full p-1 rounded">
+                            <option value="laufen">Laufen</option>
+                            <option value="gehen">Gehen</option>
+                            <option value="radfahren">Radfahren</option>
+                        </select>
+                    </div>
 
-                <button onclick="calculateProgress()" class="bg-blue-500 text-white px-4 py-1 rounded mr-2">Berechne
-                    Fortschritt</button>
-                <button onclick="saveActivity()" class="bg-green-500 text-white px-4 py-1 rounded">Bestätigen</button>
+                    <div id="input-container" class="mb-2 hidden">
+                        <label id="input-label" for="amount"></label>
+                        <input type="number" id="amount" class="w-full p-1 rounded" placeholder="">
+                        <br>
+                        <small id="info-text" class="text-gray-500 block mt-1"></small>
+                    </div>
 
-                <div id="progress-result" class="mt-4 text-sm text-gray-700"></div>
+                    <button onclick="calculateProgress()" class="bg-blue-500 text-white px-4 py-1 rounded mr-2">Berechne
+                        Fortschritt</button>
+                    <button onclick="saveActivity()"
+                        class="bg-green-500 text-white px-4 py-1 rounded">Bestätigen</button>
+
+                    <div id="progress-result" class="mt-4 text-sm text-gray-700"></div>
+
+
+                    <div id="progress-result" class="mt-4 text-sm text-gray-700"></div>
+                </div>
+            </div>
+            <div class="section">
+                <button onclick="openActivityForm()" class="bg-purple-500 text-white px-4 py-2 rounded">➕</button>
+            </div>
+
+
+            <div class="section">
+                <h2>Speicherstand</h2>
+                <button onclick="exportSaveData()">⬇️ Exportieren</button>
+                <input type="file" id="importFile" style="display:none" onchange="importSaveData(this.files[0])">
+                <button onclick="document.getElementById('importFile').click()">⬆️ Importieren</button>
+            </div>
+
+            <!-- Letztes Update -->
+            <div class="section">
+                <small>Letztes Update: <span id="last_update"></span></small>
             </div>
         </div>
-        <div class="section">
-            <button onclick="openActivityForm()" class="bg-purple-500 text-white px-4 py-2 rounded">➕</button>
+
+        <!-- Popup-Fenster für Kartendetails -->
+        <div id="card-popup" class="card-popup hidden">
+            <div class="card-popup-content">
+                <span id="close-popup" class="close-btn">&times;</span>
+                <img id="popup-icon" src="" alt="Icon" class="popup-icon">
+                <h2 id="popup-title"></h2>
+                <p id="popup-description"></p>
+                <button id="complete-quest-btn" class="complete-quest-btn hidden">Quest abschließen</button>
+            </div>
         </div>
 
-
-        <div class="section">
-            <h2>Speicherstand</h2>
-            <button onclick="exportSaveData()">⬇️ Exportieren</button>
-            <input type="file" id="importFile" style="display:none" onchange="importSaveData(this.files[0])">
-            <button onclick="document.getElementById('importFile').click()">⬆️ Importieren</button>
-        </div>
-
-        <!-- Letztes Update -->
-        <div class="section">
-            <small>Letztes Update: <span id="last_update"></span></small>
-        </div>
-    </div>
-
-    <!-- Popup-Fenster für Kartendetails -->
-    <div id="card-popup" class="card-popup hidden">
-        <div class="card-popup-content">
-            <span id="close-popup" class="close-btn">&times;</span>
-            <img id="popup-icon" src="" alt="Icon" class="popup-icon">
-            <h2 id="popup-title"></h2>
-            <p id="popup-description"></p>
-            <button id="complete-quest-btn" class="complete-quest-btn hidden">Quest abschließen</button>
-        </div>
-    </div>
-
-    <!-- Popup für Tutorial Overlay -->
-    <div id="characterOverlay" style="
+        <!-- Popup für Tutorial Overlay -->
+        <div id="characterOverlay" style="
   position: fixed;
   top: 0; left: 0;
   width:100vw; height:100vh;
@@ -157,222 +173,328 @@
   align-items: center;
   background: rgba(0,0,0,.8);
   z-index: 1000;">
-        <div
-            style="background: #fff; color: #000; padding: 2rem; border-radius: 8px; max-width: 600px; text-align: center;">
-            <h2>Dein Charakterbogen</h2>
-            <p>Dies ist der Charakterbogen, hier ist der Fortschritt von dir und deinem Avatar erkennbar. Unter deinem
-                gewählten Namen findest du die allgemeine Erfahrungsleiste, sowie die drei wichtigsten (und vorerst
-                einzigen) Attribute: <br> Konstitution, Stärke und Intelligenz</p>
-            <button id="characterClose">Alles klar!</button>
+            <div
+                style="background: #fff; color: #000; padding: 2rem; border-radius: 8px; max-width: 600px; text-align: center;">
+                <h2>Dein Charakterbogen</h2>
+                <p>Dies ist der Charakterbogen, hier ist der Fortschritt von dir und deinem Avatar erkennbar. Unter
+                    deinem
+                    gewählten Namen findest du die allgemeine Erfahrungsleiste, sowie die drei wichtigsten (und vorerst
+                    einzigen) Attribute: <br> Konstitution, Stärke und Intelligenz</p>
+                <button id="characterClose">Alles klar!</button>
+            </div>
         </div>
-    </div>
+        <!-- Popup für Belohnung -->
+        <div id="reward-popup" class="reward-popup hidden">
+            <div class="reward-popup-content">
+                <p id="reward-message"></p>
+                <button onclick="closeRewardPopup()">Okay!</button>
+            </div>
+        </div>
 
 
 
-    <!-- JavaScript zum Laden und Anzeigen der JSON-Daten -->
-    <script>
-        // Charakterdaten und Questkarten aus JSON laden und ins Dashboard einsetzen
-        fetch("quests.json")
-            .then(res => res.json())
-            .then((questCards) => {
-
-                const CharacterData = character; //char aus character.js
-
-                // Grunddaten einsetzen
-                document.getElementById('name').textContent = localStorage.getItem('playerName');
-                document.getElementById('level').textContent = CharacterData.level;
-                document.getElementById('xp').textContent = CharacterData.xp;
-                document.getElementById('xp_next_level').textContent = CharacterData.xp_next_level;
-                document.getElementById('last_update').textContent = CharacterData.last_update;
-
-                // XP-Fortschritt berechnen und dynamisch anzeigen
-                function animateXPBar(xpBar, targetPercent) {
-                    let currentPercent = 0;
-                    const interval = setInterval(() => {
-                        if (currentPercent >= targetPercent) {
-                            currentPercent = targetPercent;
-                            clearInterval(interval);
-                        }
-                        xpBar.style.width = currentPercent + '%';
-                        xpBar.textContent = Math.floor(currentPercent) + '%';
-                        currentPercent += 1;  // Schrittgröße: 1% pro Tick (kann man auch feiner machen)
-                    }, 15);  // Geschwindigkeit (15 ms pro Tick = schnell & smooth)
-                }
-
-                const xpPercent = Math.min(100, (CharacterData.xp / CharacterData.xp_next_level) * 100);
-                const xpBar = document.getElementById('xp_bar');
-                animateXPBar(xpBar, xpPercent);
 
 
-                // Attribute dynamisch anzeigen
-                const attrContainer = document.getElementById('attributes');
-                for (let key in CharacterData.attributes) {
-                    const attr = CharacterData.attributes[key];
-                    const percent = Math.min(100, (attr.progress) * 100);
-                    const safeKey = key.replace(/[^a-zA-Z0-9]/g, ''); //Umlaute weg
-                    const barId = `attr_bar_${safeKey}`;  // Einzigartige ID pro Attribut
-                    const div = document.createElement('div');
-                    div.className = 'attribute';
-                    let icon = "", color = "#367345";
-                    switch (key) {
-                        case "Stärke": icon = "💪"; color = "#e74c3c"; break;
-                        case "Konstitution": icon = "🏃"; color = "#27ae60"; break;
-                        case "Intelligenz": icon = "🧠"; color = "#2980b9"; break;
-                        case "Beweglichkeit": icon = "🤸"; color = "#f39c12"; break;
-                        default: icon = "✨";
+        <!-- JavaScript zum Laden und Anzeigen der JSON-Daten -->
+        <script>
+            // Charakterdaten und Questkarten aus JSON laden und ins Dashboard einsetzen
+            fetch("quests.json")
+                .then(res => res.json())
+                .then((questCards) => {
+
+                    const CharacterData = character; //char aus character.js
+
+                    // Grunddaten einsetzen
+                    document.getElementById('name').textContent = localStorage.getItem('playerName');
+                    document.getElementById('level').textContent = CharacterData.level;
+                    document.getElementById('xp').textContent = CharacterData.xp;
+                    document.getElementById('xp_next_level').textContent = CharacterData.xp_next_level;
+                    document.getElementById('last_update').textContent = CharacterData.last_update;
+
+                    // XP-Fortschritt berechnen und dynamisch anzeigen
+                    function animateXPBar(xpBar, targetPercent) {
+                        let currentPercent = 0;
+                        const interval = setInterval(() => {
+                            if (currentPercent >= targetPercent) {
+                                currentPercent = targetPercent;
+                                clearInterval(interval);
+                            }
+                            xpBar.style.width = currentPercent + '%';
+                            xpBar.textContent = Math.floor(currentPercent) + '%';
+                            currentPercent += 1;  // Schrittgröße: 1% pro Tick (kann man auch feiner machen)
+                        }, 15);  // Geschwindigkeit (15 ms pro Tick = schnell & smooth)
                     }
 
-                    div.innerHTML = `<strong>${icon} ${key}</strong> (${attr.value} / ${attr.max})<br>
-<div class="bar"><div id="${barId}" class="bar-inner" style="width:${percent}%; background-color: ${color};">0%</div></div>`;
-                    attrContainer.appendChild(div);
+                    const xpPercent = Math.min(100, (CharacterData.xp / CharacterData.xp_next_level) * 100);
+                    const xpBar = document.getElementById('xp_bar');
+                    animateXPBar(xpBar, xpPercent);
 
-                    // Animation direkt starten
-                    animateXPBar(document.getElementById(barId), percent);
-                }
-                // Aktive Karten-ID-Liste aus dem Charakterprofil
-                const activeCardIDs = CharacterData.active_cards;
 
-                // Filtere die vollständige Kartenliste nach den aktiven IDs
-                const activeCards = questCards.filter(card => activeCardIDs.includes(card.id));
-
-                // Karten dynamisch auflisten
-                const cardList = document.getElementById("card-list");
-                cardList.innerHTML = "";
-
-                activeCards.forEach((card) => {
-                    const cardItem = document.createElement("div");
-                    cardItem.className = "card-entry";
-
-                    // Wrapper für Icon + Overlay
-                    const iconWrapper = document.createElement("div");
-                    iconWrapper.className = "card-icon-wrapper";
-
-                    const icon = document.createElement("img");
-                    icon.src = card.icon;
-                    icon.className = "card-icon";
-
-                    iconWrapper.appendChild(icon);
-
-                    // Klickverhalten für Popup
-                    icon.addEventListener("click", () => {
-                        document.getElementById("popup-icon").src = card.icon;
-                        document.getElementById("popup-title").textContent = card.title;
-                        document.getElementById("popup-description").textContent = card.description;
-                        document.getElementById("card-popup").classList.remove("hidden");
-                        const btn = document.getElementById("complete-quest-btn");
-                        if (!card.done) {
-                            btn.classList.remove("hidden");
-                            btn.onclick = () => {
-                                openActivityForm(`Quest: ${card.title}`); // Text vorausfüllen
-                                document.getElementById("card-popup").classList.add("hidden");
-                            };
-                        } else {
-                            btn.classList.add("hidden");
-                            btn.onclick = null;
+                    // Attribute dynamisch anzeigen
+                    const attrContainer = document.getElementById('attributes');
+                    for (let key in CharacterData.attributes) {
+                        const attr = CharacterData.attributes[key];
+                        const percent = Math.min(100, (attr.progress) * 100);
+                        const safeKey = key.replace(/[^a-zA-Z0-9]/g, ''); //Umlaute weg
+                        const barId = `attr_bar_${safeKey}`;  // Einzigartige ID pro Attribut
+                        const div = document.createElement('div');
+                        div.className = 'attribute';
+                        let icon = "", color = "#367345";
+                        switch (key) {
+                            case "Stärke": icon = "💪"; color = "#e74c3c"; break;
+                            case "Konstitution": icon = "🏃"; color = "#27ae60"; break;
+                            case "Intelligenz": icon = "🧠"; color = "#2980b9"; break;
+                            case "Beweglichkeit": icon = "🤸"; color = "#f39c12"; break;
+                            default: icon = "✨";
                         }
+
+                        div.innerHTML = `<strong>${icon} ${key}</strong> – Level ${attr.level}, ${Math.floor(attr.progress * attr.next)} / ${attr.next} Punkte<br>
+<div class="bar"><div id="${barId}" class="bar-inner" style="width:${percent}%; background-color: ${color};">0%</div></div>`;
+
+                        attrContainer.appendChild(div);
+
+                        // Animation direkt starten
+                        animateXPBar(document.getElementById(barId), percent);
+                    }
+                    // Aktive Karten-ID-Liste aus dem Charakterprofil
+                    const activeCardIDs = CharacterData.active_cards;
+
+                    // Filtere die vollständige Kartenliste nach den aktiven IDs
+                    const activeCards = questCards.filter(card => activeCardIDs.includes(card.id));
+
+                    // Karten dynamisch auflisten
+                    const cardList = document.getElementById("card-list");
+                    cardList.innerHTML = "";
+
+                    activeCards.forEach((card) => {
+                        const cardItem = document.createElement("div");
+                        cardItem.className = "card-entry";
+
+                        // Wrapper für Icon + Overlay
+                        const iconWrapper = document.createElement("div");
+                        iconWrapper.className = "card-icon-wrapper";
+
+                        const icon = document.createElement("img");
+                        icon.src = card.icon;
+                        icon.className = "card-icon";
+
+                        iconWrapper.appendChild(icon);
+
+                        // Klickverhalten für Popup
+                        icon.addEventListener("click", () => {
+                            document.getElementById("popup-icon").src = card.icon;
+                            document.getElementById("popup-title").textContent = card.title;
+                            document.getElementById("popup-description").textContent = card.description;
+                            document.getElementById("card-popup").classList.remove("hidden");
+                            const btn = document.getElementById("complete-quest-btn");
+                            if (!card.done) {
+                                btn.classList.remove("hidden");
+                                btn.onclick = () => {
+                                    openActivityForm(`Quest: ${card.title}`); // Text vorausfüllen
+                                    document.getElementById("card-popup").classList.add("hidden");
+                                };
+                            } else {
+                                btn.classList.add("hidden");
+                                btn.onclick = null;
+                            }
+                        });
+
+
+                        // ✅ Overlay-Haken (wenn erledigt)
+                        if (card.done) {
+                            const checkmarkOverlay = document.createElement("span");
+                            checkmarkOverlay.className = "checkmark-overlay";
+                            checkmarkOverlay.textContent = "✔️";
+                            iconWrapper.appendChild(checkmarkOverlay);
+                        }
+
+                        // Titel der Karte
+                        const title = document.createElement("span");
+                        title.textContent = card.title;
+                        title.className = "card-title";
+
+                        cardItem.appendChild(iconWrapper);
+                        cardItem.appendChild(title);
+                        cardList.appendChild(cardItem);
                     });
 
 
-                    // ✅ Overlay-Haken (wenn erledigt)
-                    if (card.done) {
-                        const checkmarkOverlay = document.createElement("span");
-                        checkmarkOverlay.className = "checkmark-overlay";
-                        checkmarkOverlay.textContent = "✔️";
-                        iconWrapper.appendChild(checkmarkOverlay);
+                    // Popup schließen
+                    document.getElementById("close-popup").addEventListener("click", () => {
+                        document.getElementById("card-popup").classList.add("hidden");
+                    });
+                });
+
+            //Popup zum Aktivitäten eintragen
+            function openActivityForm(defaultText = "") {
+                document.getElementById("activity-overlay").style.display = "flex";
+                document.getElementById("details").value = defaultText;
+                document.getElementById("progress-result").innerText = "";
+            }
+
+            function closeActivityForm() {
+                document.getElementById("activity-overlay").style.display = "none";
+            }
+
+
+            //Logik fürs Tracken der Aktivitäten
+            let activities = [];
+
+            function openActivityFormForQuest(questId) {
+                document.getElementById("activity-form").scrollIntoView({ behavior: "smooth" });
+                document.getElementById("details").value = `Quest #${questId}`;
+            }
+            //Dynamische Aktivitätsauswahl
+            function updateActivityFields() {
+                const category = document.getElementById("category").value;
+                const subtypeContainer = document.getElementById("activity-subtype-container");
+                const inputContainer = document.getElementById("input-container");
+                const inputLabel = document.getElementById("input-label");
+                const infoText = document.getElementById("info-text");
+                const amountInput = document.getElementById("amount");
+
+                if (category === "ausdauer") {
+                    subtypeContainer.classList.remove("hidden");
+                    inputContainer.classList.remove("hidden");
+                    inputLabel.textContent = "Strecke (in Kilometern)";
+                    amountInput.placeholder = "z. B. 6";
+                    infoText.textContent = "Gib die gelaufene / gefahrene Strecke ohne Pausen an.";
+                } else if (category === "kraft") {
+                    subtypeContainer.classList.add("hidden");
+                    inputContainer.classList.remove("hidden");
+                    inputLabel.textContent = "Trainingszeit (in Minuten)";
+                    amountInput.placeholder = "z. B. 15";
+                    infoText.textContent = "Gib die Zeit aktiver Belastung ohne Pausen an.";
+                } else {
+                    subtypeContainer.classList.add("hidden");
+                    inputContainer.classList.add("hidden");
+                }
+            }
+            //Berechnung des Progress anhand der Aktivität
+            function calculateProgress() {
+                const category = document.getElementById("category").value;
+                const subtype = document.getElementById("subtype").value;
+                const amount = parseFloat(document.getElementById("amount").value);
+                const resultDiv = document.getElementById("progress-result");
+
+                if (!category || isNaN(amount) || amount <= 0) {
+                    resultDiv.textContent = "Bitte eine gültige Eingabe machen.";
+                    return;
+                }
+
+                let result = {
+                    Stärke: 0,
+                    Konstitution: 0,
+                    Beweglichkeit: 0
+                };
+                let beschreibung = "";
+
+                if (category === "ausdauer") {
+                    if (subtype == "laufen") {
+                        result.Konstitution = Math.round(amount); // 1 Konsti pro km
+                        beschreibung = `🏃  ${amount} km ${subtype} : \n➕ Konstitution +${result.Konstitution}`;
                     }
+                    else if (subtype == "gehen") {
+                        result.Konstitution = Math.round(amount / 2); // 1 Konsti pro 2 km
+                        beschreibung = `🚶  ${amount} km ${subtype} : \n➕ Konstitution +${result.Konstitution}`;
+                    }
+                    if (subtype == "radfahren") {
+                        result.Konstitution = Math.round(amount / 5); // 1 Konsti pro 5 km
+                        beschreibung = `🚴  ${amount} km ${subtype} : \n➕ Konstitution +${result.Konstitution}`;
+                    }
+                } else if (category === "kraft") {
+                    result.Stärke = Math.round(amount / 5); // z. B. 1 Stärke pro 5 Min
+                    if (amount >= 30) result.Konstitution += 2; // Bonus für lange Sessions
+                    beschreibung = `💪  ${amount} Minuten Krafttraining: \n➕ Stärke +${result.Stärke}` +
+                        (result.Konstitution ? `, Konstitution +${result.Konstitution}` : "");
+                }
 
-                    // Titel der Karte
-                    const title = document.createElement("span");
-                    title.textContent = card.title;
-                    title.className = "card-title";
+                // Details eintragen
+                document.getElementById("progress-result").textContent = beschreibung;
 
-                    cardItem.appendChild(iconWrapper);
-                    cardItem.appendChild(title);
-                    cardList.appendChild(cardItem);
-                });
-
-
-                // Popup schließen
-                document.getElementById("close-popup").addEventListener("click", () => {
-                    document.getElementById("card-popup").classList.add("hidden");
-                });
-            });
-
-        //Popup zum Aktivitäten eintragen
-        function openActivityForm(defaultText = "") {
-            document.getElementById("activity-overlay").style.display = "flex";
-            document.getElementById("details").value = defaultText;
-            document.getElementById("progress-result").innerText = "";
-        }
-
-        function closeActivityForm() {
-            document.getElementById("activity-overlay").style.display = "none";
-        }
-
-
-        //Logik fürs Tracken der Aktivitäten
-        let activities = [];
-
-        function openActivityFormForQuest(questId) {
-            document.getElementById("activity-form").scrollIntoView({ behavior: "smooth" });
-            document.getElementById("details").value = `Quest #${questId}`;
-        }
-
-
-        function calculateProgress() {
-            const type = document.getElementById("type").value;
-            const details = document.getElementById("details").value;
-
-            // einfache Logik: Anpassbar!
-            let result = {
-                Stärke: 0,
-                Konstitution: 0,
-                Beweglichkeit: 0,
-            };
-
-            if (type === "Krafttraining") result.Stärke = 10;
-            if (type === "Laufen") result.Konstitution = 10;
-            if (type === "Radfahren") result.Konstitution = 7;
-            if (type === "Stabi") result.Stärke = 4;
-
-            document.getElementById("progress-result").innerText =
-                `🏋️ Fortschritt: Stärke +${result.Stärke}, Konstitution +${result.Konstitution}, Beweglichkeit +${result.Beweglichkeit}`;
-
-            // Zwischenspeichern
-            activities.push({
-                datum: new Date().toISOString().split("T")[0],
-                typ: type,
-                details: details,
-                attributgewinn: result,
-            });
-        }
-
-        function saveActivity() {
-            localStorage.setItem("getupia_activities", JSON.stringify(activities));
-            alert("Aktivität gespeichert! 🗃️");
-        }
-        //Menü
-        function toggleMenu() {
-            const menu = document.getElementById("side-menu");
-            menu.classList.toggle("hidden");
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('showTutorial') === 'true') {
-                // Popup zeigen
-                const characterOverlay = document.getElementById('characterOverlay');
-                characterOverlay.style.display = 'flex';
-                // Nach dem Anzeigen den Wert entfernen
-                localStorage.setItem('showTutorial', 'false');
-
-                // Button zum Schließen
-                document.getElementById('characterClose').addEventListener('click', () => {
-                    characterOverlay.style.display = 'none';
+                activities.push({
+                    datum: new Date().toISOString().split("T")[0],
+                    typ: category,
+                    untertyp: subtype || "",
+                    menge: amount,
+                    attributgewinn: result,
+                    beschreibung: beschreibung
                 });
             }
-        });
 
-    </script>
+
+            function saveActivity() {
+                const latest = activities[activities.length - 1];
+                const char = loadCharacterData(); // oder `character`, je nach Struktur
+
+                const attr = char.attributes;
+                const gain = latest.attributgewinn;
+
+                for (let key in gain) {
+                    const amount = gain[key];
+                    if (amount <= 0) continue;
+
+                    const current = attr[key];
+                    const totalProgress = current.progress * current.next + amount;
+
+                    if (totalProgress >= current.next) {
+                        current.level += Math.floor(totalProgress / current.next);
+                        current.progress = (totalProgress % current.next) / current.next;
+                        current.next = Math.round(current.next * 1.2); // nächste Stufe schwerer
+                    } else {
+                        current.progress = totalProgress / current.next;
+                    }
+                }
+
+                char.last_update = new Date().toISOString().split("T")[0];
+                saveCharacterData(char);
+
+                localStorage.setItem("getupia_activities", JSON.stringify(activities));
+
+                showRewardPopup("Aktivität gespeichert! 🗃️");
+
+                // Seite erst nach Klick auf "Okay" neu laden:
+                // Alternativ ohne reload: update UI direkt dynamisch
+            }
+
+            function showRewardPopup(message) {
+                const popup = document.getElementById("reward-popup");
+                const msg = document.getElementById("reward-message");
+                msg.textContent = message;
+                popup.classList.remove("hidden");
+                // Overlay oder sonstige Fokussierung ggf. hier ergänzen
+            }
+
+            function closeRewardPopup() {
+                const popup = document.getElementById("reward-popup");
+                popup.classList.add("hidden");
+                // Nach Popup schließen die Seite neu laden
+                location.reload();
+            }
+
+
+            //Menü
+            function toggleMenu() {
+                const menu = document.getElementById("side-menu");
+                menu.classList.toggle("hidden");
+            }
+
+            window.addEventListener('DOMContentLoaded', () => {
+                if (localStorage.getItem('showTutorial') === 'true') {
+                    // Popup zeigen
+                    const characterOverlay = document.getElementById('characterOverlay');
+                    characterOverlay.style.display = 'flex';
+                    // Nach dem Anzeigen den Wert entfernen
+                    localStorage.setItem('showTutorial', 'false');
+
+                    // Button zum Schließen
+                    document.getElementById('characterClose').addEventListener('click', () => {
+                        characterOverlay.style.display = 'none';
+                    });
+                }
+            });
+
+        </script>
 </body>
 
 </html>
