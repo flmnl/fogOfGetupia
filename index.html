@@ -20,7 +20,7 @@
 
     <script src="character.js"></script>
     <script src="saveManager.js"></script>
-
+    <script src="tutorialData.js"></script>
 
 
 </head>
@@ -183,6 +183,18 @@
                 <button id="characterClose">Alles klar!</button>
             </div>
         </div>
+
+        <!-- Tutorial Popup, todo: Oberes löschen -->
+        <div id="tutorial-popup"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded shadow max-w-lg text-center relative">
+                <button onclick="closeTutorialStep()"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-black">×</button>
+                <h2 class="text-xl font-bold mb-2" id="tutorial-title">Hinweis</h2>
+                <p id="tutorial-text">Text kommt hier hin...</p>
+            </div>
+        </div>
+
         <!-- Popup für Belohnung -->
         <div id="reward-popup" class="reward-popup hidden">
             <div class="reward-popup-content">
@@ -248,7 +260,7 @@
                             default: icon = "✨";
                         }
 
-                        div.innerHTML = `<strong>${icon} ${key}</strong> – Level ${attr.level}, ${Math.floor(attr.progress * attr.next)} / ${attr.next} Punkte<br>
+                        div.innerHTML = `<strong>${icon} ${key}</strong> – Level ${attr.level}  – nächstes Level: ${Math.floor(attr.progress * attr.next)} / ${attr.next} Punkte<br>
 <div class="bar"><div id="${barId}" class="bar-inner" style="width:${percent}%; background-color: ${color};">0%</div></div>`;
 
                         attrContainer.appendChild(div);
@@ -478,7 +490,7 @@
                 const menu = document.getElementById("side-menu");
                 menu.classList.toggle("hidden");
             }
-
+            //tutorial (alt)
             window.addEventListener('DOMContentLoaded', () => {
                 if (localStorage.getItem('showTutorial') === 'true') {
                     // Popup zeigen
@@ -493,6 +505,53 @@
                     });
                 }
             });
+            window.addEventListener("DOMContentLoaded", () => {
+                if (tutorialActive) {
+                    triggerTutorial(tutorials);
+                }
+            });
+            //Tutorial Neu
+            let tutorialSteps = [];
+            let currentStepIndex = 0;
+
+            function triggerTutorial(steps) {
+                tutorialSteps = steps;
+                currentStepIndex = 0;
+                showTutorialStep();
+            }
+
+            function showTutorialStep() {
+                if (currentStepIndex >= tutorialSteps.length) return;
+
+                const step = tutorialSteps[currentStepIndex];
+                setTimeout(() => {
+                    // Inhalt aktualisieren
+                    document.getElementById("tutorial-title").textContent = step.title || "Hinweis";
+                    document.getElementById("tutorial-text").textContent = step.text || "";
+
+                    // Button anpassen
+                    const btn = document.getElementById("tutorial-close-btn");
+                    btn.textContent = step.buttonText || "×";
+                    btn.onclick = () => closeTutorialStep(step.onClose);
+
+                    // Anzeigen
+                    document.getElementById("tutorial-popup").classList.remove("hidden");
+                }, step.delay || 0);
+            }
+
+            function closeTutorialStep(onClose) {
+                document.getElementById("tutorial-popup").classList.add("hidden");
+
+                if (typeof onClose === "function") {
+                    onClose();
+                }
+
+                currentStepIndex++;
+                if (currentStepIndex < tutorialSteps.length) {
+                    showTutorialStep();
+                }
+            }
+
 
         </script>
 </body>

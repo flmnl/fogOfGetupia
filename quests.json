@@ -25,5 +25,14 @@
     "type": "Geist",
     "unlocked": true,
     "done":true
+  },
+  {
+    "id": 10003,
+    "title": "Erste Schritte",
+    "description": "Du machst dich auf den Weg ins Landesinnere. Mache ein Ausdauertraining oder ein Krafttraining, das die Beine beinhaltet.",
+    "icon":"compass.jpg",
+    "type":"Beine",
+    "unlocked":true,
+    "done": false
   }
 ]
