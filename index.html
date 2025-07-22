@@ -203,6 +203,15 @@
             </div>
         </div>
 
+        <div id="dev-tools" class="fixed top-2 right-2 bg-gray-800 text-white p-2 rounded shadow z-50">
+            <strong>DevTools</strong><br>
+            <button class="bg-red-600 hover:bg-red-700 px-2 py-1 my-1 w-full rounded" onclick="resetCharacter()">Reset
+                Save</button>
+            <button class="bg-blue-600 hover:bg-blue-700 px-2 py-1 my-1 w-full rounded" onclick="resetTutorial()">Reset
+                Tutorial</button>
+            <button class="bg-green-600 hover:bg-green-700 px-2 py-1 my-1 w-full rounded"
+                onclick="console.log(localStorage)">Log LS</button>
+        </div>
 
 
 
@@ -549,6 +558,19 @@
                 currentStepIndex++;
                 if (currentStepIndex < tutorialSteps.length) {
                     showTutorialStep();
+                }
+            }
+            function resetCharacter() {
+                if (confirm("Charakterdaten wirklich löschen?")) {
+                    localStorage.removeItem("characterData");
+                    location.reload();
+                }
+            }
+
+            function resetTutorial() {
+                if (confirm("Tutorial zurücksetzen?")) {
+                    localStorage.removeItem("tutorialState");
+                    location.reload();
                 }
             }
 
